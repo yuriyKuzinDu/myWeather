@@ -195,10 +195,8 @@ function loadCurrentCityData(data){ // try to use response.data as parameter in 
     $(_TODAY_CURRENT).append(newDate,newIcon,newDesc,newTemp,newFeel,newWind);
 
 
-    let sunriseTime = new Date(data.city.sunrise);
-    sunriseTime.setHours(sunriseTime.getHours() - 2);
-    let sunsetTime = new Date(data.city.sunset);
-    sunsetTime.setHours(sunsetTime.getHours()-2);
+    let sunriseTime = new Date(data.city.sunrise*1000);
+    let sunsetTime = new Date(data.city.sunset*1000);
     console.log(sunriseTime);
     console.log(sunsetTime);
     
