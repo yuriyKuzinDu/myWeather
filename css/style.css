@@ -29,59 +29,82 @@ button:focus{
   ::-ms-input-placeholder { /* Microsoft Edge */
     color: #fff;
   }
+  .main-header-logo:hover,
+  .today-current:hover,
+  .today-duration:hover,
+  .main-section-error:hover{
+      cursor: default;
+  }
+  .list-item-icon,
+  .list-info-icon,
+  .main-header-logo,
+  .list-item-icon > i,
+  .list-info-icon > i,
+  .today-current-icon,
+  .main-header-logo > i,
+  .today-current-icon > i,
+  .nearby-container-cityicon,
+  .hourly-info-icon-whitespace,
+  .nearby-container-cityicon > i,
+  .hourly-info-icon-whitespace > i
+{
+    overflow: visible;
+    text-shadow: 2px 4px 6px black; 
+}
+
 body {
+    width: 100vw;
+    height: 100vh;
     display: grid;
     place-items: center;
-    height: 100vh;
-    width: 100vw;
-    max-height: 100vh;
-    max-width: 100vw;
     background-image: linear-gradient(#EFB447, #E3DFAD, #EFB447);
 }
 .main-wrapper {
-    height: 90vh;
-    width: 70vw;
+    width: 1120px;
+    height: 630px;
     display: grid;
     grid:
-        "main-header" 20vh
-        "main-section" 70vh
-        / 70vw;
-    border-radius: 2vw;
+        "main-header" 140px
+        "main-section" 490px
+        / 1120px;
+    border-radius: 32px;
     background: #FEB53E;
     box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.15);
 }
 .main-header {
-    height: 20vh;
-    width: 70vw;
+    width: 1120px;
+    height: 140px;
     grid-area: main-header;
     display: grid;
     grid: 
-        "main-header-logo" 12vh
-        "main-header-nav" 8vh
-        /70vw;
+        "main-header-logo" 84px
+        "main-header-nav" 56px
+        /1120px;
 }
 .main-header-logo {
-    height: 12vh;
-    width: 70vw;
+    width: 1120px;
+    height: 84px;
     grid-area: main-header-logo;
     display: grid;
-    place-items: center;
+    grid-auto-flow: column;
+    place-content: center;
+    column-gap: 22px;
     color: #fff;
     font-size: 3em;
 }
 .main-header-nav {
-    height: 8vh;
-    width: 70vw;
+    width: 1120px;
+    height: 56px;
     grid-area: main-header-nav;
     display: grid;
-    grid: "nav-controls nav-search" 8vh / 50vw 20vw;
+    grid: "nav-controls nav-search" 56px / 800px 320px;
 }
 .nav-controls {
-    height: 8vh;
-    width: 50vw;
+    width: 800px;
+    height: 56px;
     grid-area: nav-controls;
     display: grid;
-    grid: "nav-controls-today nav-controls-forecast" 8vh / 10vw 10vw auto;
+    grid: "nav-controls-today nav-controls-forecast" 56px / 160px 160px auto;
     column-gap: 3px;
     font-size: 1.3em;
     color: #fff;
@@ -94,39 +117,41 @@ body {
 }
 .nav-controls-forecast,
 .nav-controls-today {
-    height: 8vh;
-    width: 10vw;
+    width: 160px;
+    height: 40px;
     display: grid;
     place-items: center;
+    place-self: end;
 }
 .nav-controls > div:hover {
-    background: #F79700;
+    background: rgb(255, 168, 29);
     cursor: pointer;
-    border-top-left-radius: 1vw;
-    border-top-right-radius: 1vw;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
 }
 .nav-controls-selected{
-    border-top-left-radius: 1vw;
-    border-top-right-radius: 1vw;
-    background: #F79700;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background: rgb(255, 168, 29);
     font-weight: bold;
     color: darkslategray;
 }
 .nav-search{
-    height: 8vh;
-    width: 20vw;
+    width: 320px;
+    height: 40px;
     grid-area: nav-search;
     display: flex;
     position: relative;
     justify-content: flex-start;
     align-items: center;
+    place-self: end;
 }
 .nav-search-input {
     width: 80%;
-    border:5px solid #F79700;
+    height: 20px;
+    border:5px solid rgb(255, 168, 29);
     border-right: none;
     padding: 5px;
-    height: 20px;
     border-radius: 5px 0 0 5px;
     outline: none;
     color: #fff;
@@ -135,8 +160,8 @@ body {
 .nav-search-button{
     width: 40px;
     height: 40px;
-    border: 1px solid #F79700;
-    background: #F79700;
+    border: 1px solid rgb(255, 168, 29);
+    background: rgb(255, 168, 29);
     text-align: center;
     color: #FEB53E;
     border-radius: 0 5px 5px 0;
@@ -148,151 +173,128 @@ body {
 
 
 .main-section {
+    width: 1120px;
+    height: 490px;
     grid-area: main-section;
-    background: #F79700;
     display: grid;
     overflow: hidden;
-    height: 70vh;
-    width: 70vw;
-    grid: "main-section-today main-section-forecast" 70vh / 70vw 70vw;
+    grid: 
+    "main-section-today main-section-forecast" 490px 
+    "main-section-error mein-section-ads " 490px
+    / 1120px 1120px;
+    background: rgb(255, 168, 29);
+}
+.main-section-error{
+    width: 1120px;
+    height: 490px;
+    grid-area: main-section-error;
+    display: grid;
+    place-content: end center;
+    background: url(../img/404.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 30%;
 }
 
 .main-section-today {
+    width: 1120px;
+    height: 490px;
     grid-area: main-section-today;
     display: grid;
-    height: 70vh;
-    width: 70vw;
     grid:
-        "today-wrapper" 55vh
-        "today-nearby" 10vh
-        / 65vw;
-    place-content: center;
-}
-
-.today-wrapper {
-    grid-area: today-wrapper;
-    height: 55vh;
-    width: 65vw;
-    display: grid;
-    grid:
-        "today-current today-hourly" 55vh
-         / 25vw 40vw;
+        "today-current today-hourly" 330px
+        "today-duration today-nearby" 160px
+        / 200px 840px;
     place-content: center;
 }
 .today-current {
+    width: 200px;
+    height: 330px;
     grid-area: today-current;
-    height: 55vh;
-    width: 25vw;
     display: grid;
-    grid : 
-        "today-current-dataset" 50vh
-        "today-current-dayduration" 5vh
-        / 25vw;
-}
-.today-current-dataset{
-    grid-area: today-current-dataset;
-    height: 50vh;
-    width: 25vw;
-    display: grid;
-    justify-items: center;
-    place-content: center;
     grid-auto-rows: max-content;
     grid-auto-flow: row;
-    row-gap: 2vh;
+    justify-items: center;
+    place-content: center;
+    row-gap: 4px;
 }
-.dataset-date{
-    font-weight: bold;
+.today-current-date{
+    text-align: center;
     font-size: 1.1em;
+    font-weight: bold;
 }
-.dataset-icon {
+.today-current-icon {
+    font-size: 6.6em;
     color: #fff;
-    font-size: 8em;
 }
-.dataset-description{
-    color: #000;
+.today-current-description{
     font-size: 0.9em;
     font-weight: bold;
+    color: #000;
 }
-.dataset-temperature{
+.today-current-temperature{
+    font-size: 1.2em;
     font-weight: bold;
-    font-size: 2em;
     overflow: visible;
 }
-.dataset-feeling,
-.dataset-wind {
+.today-current-feeling,
+.today-current-wind {
     font-size: 0.8em;
     color: darkslategray;
 }
-.today-current-dayduration{
-    grid-area: today-current-dayduration;
-    height: 5vh;
-    width: 25vw;
+.today-duration{
+    width: 200px;
+    height: 160px;
+    grid-area: today-duration;
     display: grid;
-    grid: "dayduration-sunrise dayduration-time dayduration-sunset" 5vh
-    /8vw 8vw 8vw;
-    justify-content: center;
-    font-size: 0.8em;
+    grid-auto-rows: 30px;
+    grid-auto-flow: row;
+    place-content: center;
+    font-size: 0.7em;
+    font-weight: bold;
 }
-.dayduration-sunrise{
-    grid-area: dayduration-sunrise;
-    height: 5vh;
-    width: 8vw;
-    display: grid;
-    place-items: center;
-}
-.dayduration-time{
-    grid-area: dayduration-time;
-    height: 5vh;
-    width: 8vw;
-    display: grid;
-    place-items: center;
-}
-.dayduration-sunset{
-    grid-area: dayduration-sunset;
-    height: 5vh;
-    width: 8vw;
-    display: grid;
-    place-items: center;
+.today-duration-sunrise,
+.today-duration-time,
+.today-duration-sunset{
+    text-align: left;
 }
 .today-hourly {
+    width: 840px;
+    height: 330px;
     grid-area: today-hourly;
-    height: 55vh;
-    width: 40vw;
     display: grid;
-    grid-auto-rows: 50vh;
-    grid-auto-columns: max-content;
+    grid-auto-rows: 250px;
+    grid-auto-columns: 1fr;
     grid-auto-flow: column;
-    column-gap: 0.4vw;
+    place-content: center;
 }
 .today-hourly-info{
-    align-self: baseline;
-    height: 50vh;
+    height: 250px;
     display: grid;
-    justify-items: center;
-    place-content: center;
     grid-auto-rows: max-content;
     grid-auto-flow: row;
-    row-gap: 2vh;
+    place-content: center;
+    row-gap: 4px;
 }
 .hourly-info-time{
+    font-size: .9em;
     font-weight: bold;
-    font-size: 1.1em;
 }
 .hourly-info-icon-whitespace {
-    color: #fff;
-    height: 16.0999vh;
-    font-size: 3em;
+    height: 109px;
     display: grid;
     place-content: center;
+    font-size: 3em;
+    color: #fff;
 }
 .hourly-info-forecast,
 .hourly-info-temperature,
 .hourly-info-realfeel,
 .hourly-info-wind {
-    font-size: 0.8em;
-    color: darkslategray;
     display: grid;
     place-content: center;
+    font-size: 0.8em;
+    color: darkslategray;
 }
 .hourly-info-forecast,
 .hourly-info-temperature{
@@ -304,31 +306,35 @@ body {
 
 
 .today-nearby {
-    place-self: center center;
-    height: 10vh;
-    width: 45vw;
+    width: 840px;
+    height: 160px;
     grid-area: today-nearby;
     display: grid;
-    grid-template-rows: 4vh 4vh;
-    grid-template-columns: 20vw 20vw;
-    column-gap: 5vw;
-    row-gap: 1vh;
+    grid-template-rows: 28px 28px;
+    grid-template-columns: 320px 320px;
+    place-content: center center;
+    column-gap: 80px;
+    row-gap: 7px;
 }
 .today-nearby-container{
-    height: 4vh;
-    width: 20vw;
+    width: 320px;
+    height: 28px;
     display: grid;
-    font-size: 0.9em;
+    grid-auto-columns: auto 80px 80px;
     grid-auto-flow: column;
-    grid-auto-columns: auto 5vw 5vw;
+    font-size: 0.9em;
     box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.15);
 }
+.today-nearby-container:hover{
+    cursor: pointer;
+}
+
 .nearby-container-cityname{
     place-self: center baseline;
 }
 .nearby-container-cityicon{
-    color: #fff;
     font-size: 1.3em;
+    color: #fff;
 }
 
 .nearby-container-cityicon,
@@ -344,10 +350,115 @@ body {
 
 
 .main-section-forecast {
+    width: 1120px;
+    height: 490px;
     grid-area: main-section-forecast;
     display: grid;
-    height: 70vh;
-    width: 70vw;
+    grid:
+        "forecast-list" 230px
+        "forecast-selected" 260px
+        / 1040px;
     place-content: center;
+}
+
+.forecast-list{
+    width: 1040px;
+    height: 230px;
+    grid-area: forecast-list;
+    display: grid;
+    grid-auto-rows: 190px;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    place-content: end center;
+}
+.forecast-list-item{
+    height: 190px;
+    display: grid;
+    grid-auto-rows: max-content;
+    grid-auto-flow: row;
+    place-content:center;
+    row-gap: 6px;
+    text-align: center;
+}
+.list-item-day{
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.list-item-icon{
+    font-size: 4em;
+    color: #fff;
+}
+.list-item-temperature {
+    font-size: 1.1em;
+    font-weight: bold;
+    overflow: visible;
+}
+.list-item-temperature > i{
+    overflow: visible;
+}
+.list-item-description{
+    font-size: 0.8em;
+}
+.today-hourly-selected,
+.today-hourly-info:hover,
+.selected-list-info:hover,
+.forecast-list-item:hover {
+    cursor: pointer;
+    background: #FEB53E;
+    border-radius: 16px;
+}
+
+
+.forecast-selected {
+    width: 1040px;
+    height: 260px;
+    display: grid;
+    grid-auto-columns: 1040px;
+    grid-auto-rows: 260px;
+    grid-auto-flow: column;
+}
+.forecast-selected-list{
+    width: 1040px;
+    height: 260px;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 210px;
+    grid-auto-flow: column;
+    place-content: center center;
+    grid-gap: 2px;
+}
+.selected-list-info{
+    height: 210px;
+    display: grid;
+    grid-auto-rows: max-content;
+    grid-auto-flow: row;
+    place-content: center center;
+    row-gap: 4px;
+    text-align: center;
+    /* temporatory added style */
+    background: #FEB53E;
+    border-radius: 16px;
+}
+
+.list-info-time{
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.list-info-icon{
+    font-size: 3em;
+    color: #fff;
+}
+.list-info-forecast,
+.list-info-temperature
+{
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #000;
+}
+.list-info-realfeel,
+.list-info-wind
+{
+    font-size: 0.8em;
+    color: darkslategray;
 }
 

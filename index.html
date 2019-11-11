@@ -9,11 +9,14 @@
     <script src="https://kit.fontawesome.com/c69517d5e1.js" crossorigin="anonymous"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/dateformat/lib/dateformat.js"></script>
+    <script src="js/wind-direction.js"></script>
+    <script src="js/basic-functions.js"></script>
+    <script src="node_modules/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <main class="main-wrapper">
         <header class="main-header">
-            <h2 class="main-header-logo">myWeather</h2>
+            <h2 class="main-header-logo"><i class="fas fa-meteor"></i>myWeather</h2>
             <nav class="main-header-nav">
                 <div class="nav-controls">
                     <div class="nav-controls-today nav-controls-selected">
@@ -33,28 +36,30 @@
         </header>
         <section class="main-section">
             <article class="main-section-today">
-                <div class="today-wrapper">
-                    <div class="today-current">
-                        <div class="today-current-dataset">
-                            <div class="dataset-date"></div>
-                            <div class="dataset-icon"></div>
-                            <div class="dataset-description"></div>
-                            <div class="dataset-temperature"></div>
-                            <div class="dataset-feeling"></div>
-                            <div class="dataset-wind"></div>
-                        </div>
-                        <div class="today-current-dayduration">
-                            <div class="dayduration-sunrise"></div>
-                            <div class="dayduration-time"></div>
-                            <div class="dayduration-sunset"></div>
-                        </div>
-                    </div>
-                    <div class="today-hourly">
-                    </div>
+                <div class="today-current">
+                    <div class="today-current-date"></div>
+                    <div class="today-current-icon"></div>
+                    <div class="today-current-description"></div>
+                    <div class="today-current-temperature"></div>
+                    <div class="today-current-feeling"></div>
+                    <div class="today-current-wind"></div>
                 </div>
+                <div class="today-duration">
+                    <div class="today-duration-sunrise"></div>
+                    <div class="today-duration-time"></div>
+                    <div class="today-duration-sunset"></div>
+                </div>
+                <div class="today-hourly"></div>
                 <div class="today-nearby"></div>
             </article>
-            <article class="main-section-forecast">Forecast</article>
+            <article class="main-section-forecast">
+                <div class="forecast-list"></div>
+                <div class="forecast-selected"></div>
+            </article>
+            <article class="main-section-error">
+                <div class="main-section-error-message">Not found</div>
+            </article>
+            <article class="main-section-ads"></article>
         </section>
     </main>
 
