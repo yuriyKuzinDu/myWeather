@@ -1,50 +1,19 @@
-
 $('.nav-controls-today').click( ( event ) => {
-    document.querySelector('.main-section-today').scrollIntoView();
+    //document.querySelector('.main-section-today').scrollIntoView();
+    $('.main-section').scrollLeft(0);
     $('.nav-controls-selected').removeClass('nav-controls-selected');
     $('.nav-controls-today').addClass('nav-controls-selected');
 });
 $('.nav-controls-forecast').click( ( event ) => {
-    document.querySelector('.main-section-forecast').scrollIntoView();
+    //document.querySelector('.main-section-forecast').scrollIntoView();
+    $('.main-section').scrollLeft(1120);
     $('.nav-controls-selected').removeClass('nav-controls-selected');
     $('.nav-controls-forecast').addClass('nav-controls-selected');
 });
-
-//today-current-dataset 
-$('.today-current-date').html(dateFormat(new Date(),"dddd, mmmm dS")); // set the current date //https://www.npmjs.com/package/dateformat
-$('.today-current-icon').html('<i class="fas fa-umbrella"></i>');// set the icon
-$('.today-current-description').html('Rain');// set the description
-$('.today-current-temperature').html('<i class="fas fa-temperature-high"></i>'+'30.5&#8451;'); // set the t(icon) + temp + celsius(sign)
-$('.today-current-feeling').html('real feel 30.5&#8451;'); // set the windchill effect // https://goodcalculators.com/wind-chill-calculator/
-$('.today-current-wind').html('<i class="fas fa-wind"></i>'+'100m/s');
-
-//today-current-dayduration
-$('.today-duration-sunrise').html("Sunrise: "+(dateFormat(new Date(),"shortTime")));
-$('.today-duration-time').html("Duration: "+(dateFormat(new Date(),"shortTime")));
-$('.today-duration-sunset').html("Sunset: "+(dateFormat(new Date(),"shortTime")));
-
-
-//hourly-fill
-function createHourlyColumn(){
-    let time = $("<div></div>").addClass("hourly-info-time").html(dateFormat(new Date(),"shortTime"));
-    let icon = $("<div></div>").addClass("hourly-info-icon-whitespace").html('<i class="fas fa-cloud-meatball"></i>');
-    let forecast = $("<div></div>").addClass("hourly-info-forecast").html('wind');
-    let temperature = $("<div></div>").addClass("hourly-info-temperature").html('22.5&#8451;');
-    let realfeel = $("<div></div>").addClass("hourly-info-realfeel").html('12.5&#8451;');
-    let wind = $("<div></div>").addClass("hourly-info-wind").html('wind');
-    let newCol = $("<div></div>").addClass("today-hourly-info").append(time,icon,forecast,temperature,realfeel,wind);
-    $(".today-hourly").append(newCol);
-};
-
-createHourlyColumn();
-createHourlyColumn();
-createHourlyColumn();
-createHourlyColumn();
-
-createHourlyColumn();
-createHourlyColumn();
-createHourlyColumn();
-createHourlyColumn();
+$('.nav-search-button').click(e=>{
+    console.log('clicked');
+    document.querySelector('.main-section-error').scrollIntoView();
+});
 
 
 function createNearbyContainer(name){
@@ -60,57 +29,6 @@ createNearbyContainer("Krakow");
 createNearbyContainer("Zaporozhie");
 createNearbyContainer("Bachchisaray");
 createNearbyContainer("Kiev");
-
-$('.nav-search-button').click(e=>{
-    console.log('clicked');
-    document.querySelector('.main-section-error').scrollIntoView();
-});
-
-
-
-function createForecastListItem(index){
-    let day = $('<div></div>').addClass('list-item-day').html(dateFormat(new Date(),"ddd"));
-    let date =  $('<div></div>').addClass('list-item-date').html(dateFormat(new Date(),"mmm dS"));
-    let icon = $('<div></div>').addClass('list-item-icon').html('<i class="fas fa-poo-storm"></i>');
-    let temperature = $('<div></div>').addClass('list-item-temperature').html('<i class="fas fa-temperature-high"></i>'+'30.5&#8451;');
-    let description = $('<div></div>').addClass('list-item-description').html('Warm ooze');
-    let newListItem = $('<div></div>').addClass('forecast-list-item').addClass(index).append(day,date,icon,temperature,description);
-    $(".forecast-list").append(newListItem);
-}
-
-createForecastListItem('index1');
-createForecastListItem('index2');
-createForecastListItem('index3');
-createForecastListItem('index4');
-createForecastListItem('index5');
-
-
-
-
-function createSelectedListInfo(index){
-    let time = $("<div></div>").addClass("list-info-time").html(dateFormat(new Date(),"hh TT"));
-    let icon = $("<div></div>").addClass("list-info-icon").html('<i class="fas fa-cloud-sun"></i>');
-    let forecast = $("<div></div>").addClass("list-info-forecast").html('sandstorm');
-    let temperature = $("<div></div>").addClass("list-info-temperature").html('22.5&#8451;');
-    let realfeel = $("<div></div>").addClass("list-info-realfeel").html('12.5&#8451;');
-    let wind = $("<div></div>").addClass("list-info-wind").html('wind');
-    let newListInfo = $("<div></div>").addClass("selected-list-info").append(time,icon,forecast,temperature,realfeel,wind);
-    $(index).append(newListInfo);
-};
-
-for(let i = 1; i <= 5; ++i){
-    $(".forecast-selected").append($("<div></div>").addClass("forecast-selected-list").addClass("indexS"+i));
-    for(let j = 1; j <= 8; ++j){
-        createSelectedListInfo(".indexS"+i);
-}
-}
-
-// $('.today-hourly').html('');
-// $('.today-nearby').html('');
-// $('.forecast-list').html('');
-// $('.forecast-selected').html('');
-
-// 'use strict;'
 
 const API_KEY = '&appid=b9c2e6ae48b91eafc79b582a9919ec60';
 const DEFAULT_CITY = 'Kharkiv';
@@ -133,8 +51,9 @@ function permissionGranted(position){
     axios.get(FORECAST_ + lat + lon + METRIC + API_KEY)
         .then(function(response){
             console.log('User allowed the request for Geolocation');
-            console.log(response);
             loadCurrentCityData(response.data);
+            loadCurrentHourlyData(response.data.list);
+            loadForecastData(response.data.list);
         })
 };
 function permissionDenied(error){
@@ -158,11 +77,13 @@ function loadDefaultCity(){
     axios.get( FORECAST + DEFAULT_CITY + METRIC + API_KEY)
     .then(function(response){
         console.log('Loading default city');
-        console.log(response.data);
         loadCurrentCityData(response.data);
+        loadCurrentHourlyData(response.data.list);
+        loadForecastData(response.data.list);
     })
 };
-
+//
+//  START today tab -> current weather, today duration
 const _TODAY_CURRENT = '.today-current';
 const TODAY_CURRENT_DATE = 'today-current-date';
 const TODAY_CURRENT_ICON = 'today-current-icon'; 
@@ -177,7 +98,8 @@ const _TODAY_DURATION = '.today-duration';
 const DURATION_SUNRISE = 'today-duration-sunrise';
 const DURATION_SUNSET = 'today-duration-sunset';
 const DURATION_TIME = 'today-duration-time';
-function loadCurrentCityData(data){ // try to use response.data as parameter in code listed bellow
+
+function loadCurrentCityData(data){
 
     let newDate = $(DIV).addClass(TODAY_CURRENT_DATE)
         .html(dateFormat(new Date(),"dddd, mmmm dS"));
@@ -188,33 +110,161 @@ function loadCurrentCityData(data){ // try to use response.data as parameter in 
     let newTemp = $(DIV).addClass(TODAY_CURRENT_TEMPERATURE)
         .html(createTemperatureIcon(data.list[0].main.temp)+ ' ' + Math.round(data.list[0].main.temp) + CELSIUS);
     let newFeel = $(DIV).addClass(TODAY_CURRENT_WINDCHILL)
-        .html(Math.floor(windChill(data.list[0].main.temp,data.list[0].wind.speed)) + CELSIUS);
+        .html('RealFeel ' + Math.floor(windChill(data.list[0].main.temp,data.list[0].wind.speed)) + CELSIUS);
     let newWind = $(DIV).addClass(TODAY_CURRENT_WIND)
-        .html(degToCard(data.list[0].wind.speed) + ' ' + data.list[0].wind.speed + 'm/s');
+        .html('Wind(m/s) ' + data.list[0].wind.speed + ' ' + degToCard(data.list[0].wind.deg));
     $(_TODAY_CURRENT).html('');
     $(_TODAY_CURRENT).append(newDate,newIcon,newDesc,newTemp,newFeel,newWind);
 
 
-    let sunriseTime = new Date(data.city.sunrise*1000);
-    let sunsetTime = new Date(data.city.sunset*1000);
-    console.log(sunriseTime);
-    console.log(sunsetTime);
-    
+    let sunriseTime = new Date(data.city.sunrise*1e3);
+    let sunsetTime = new Date(data.city.sunset*1e3);
+    let durationMinutes = ( sunsetTime.getHours() * 60 + sunsetTime.getMinutes() ) - ( sunriseTime.getHours() * 60 + sunriseTime.getMinutes() );
+
     let sunrise = $(DIV).addClass(DURATION_SUNRISE)
-        .html('Sunrise: '+dateFormat(new Date(sunriseTime),"shortTime"));
+        .html("Sunrise: "+dateFormat(sunriseTime,"HH:MM"));
     let sunset = $(DIV).addClass(DURATION_SUNSET)
-        .html('Sunset: '+dateFormat(new Date(sunsetTime),"shortTime"));
+        .html("Sunset: "+ dateFormat(sunsetTime,"HH:MM"));
+    let duration = $(DIV).addClass(DURATION_TIME)
+        .html('Duration: ' + Math.floor(durationMinutes/60) +':'+ durationMinutes%60 );
+
     $(_TODAY_DURATION).html('');
-    $(_TODAY_DURATION).append(sunrise,sunset);
-    
-
+    $(_TODAY_DURATION).append(sunrise,sunset,duration);
 }
-// $('.today-duration-sunrise').html("Sunrise: "+(dateFormat(new Date(),"shortTime")));
-// $('.today-duration-time').html("Duration: "+(dateFormat(new Date(),"shortTime")));
-// $('.today-duration-sunset').html("Sunset: "+(dateFormat(new Date(),"shortTime")));
+//  END today tab -> current weather 
+//
+//  START today-tab hourly
+const CURRENT_HOURLY_TIME = 'hourly-info-time';
+const CURRENT_HOURLY_ICON = 'hourly-info-icon-whitespace';
+const CURRENT_HOURLY_DESC = 'hourly-info-forecast';
+const CURRENT_HOURLY_TEMP = 'hourly-info-temperature';
+const CURRENT_HOURLY_WDCH = 'hourly-info-realfeel';
+const CURRENT_HOURLY_WIND = 'hourly-info-wind';
+const CURRENT_HOURLY_NODE = 'today-hourly-info';
+const _TODAY_HOURLY = '.today-hourly';
+
+function loadCurrentHourlyData(list){
+    $(_TODAY_HOURLY).html('');
+    for(let i = 0; i < 8; ++i){
+        createHourlyNode(list[i],_TODAY_HOURLY);
+    }
+}
+function createHourlyNode( node, appendClassName ){
+    let newTime = $( DIV ).addClass( CURRENT_HOURLY_TIME )
+        .html( dateFormat( new Date( node.dt_txt ), "HH:MM" ) );
+    let  newIcon = $( DIV ).addClass( CURRENT_HOURLY_ICON )
+        .html( createWeatherIcon( node.weather[0].id, node.dt_txt ) );
+    let newDesc = $( DIV ).addClass( CURRENT_HOURLY_DESC )
+        .html( node.weather[0].main) ;
+    let newTemp = $( DIV ).addClass( CURRENT_HOURLY_TEMP )
+        .html( Math.round( node.main.temp) + CELSIUS );
+    let newWDCH = $( DIV ).addClass( CURRENT_HOURLY_WDCH )
+        .html(Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
+    let newWind = $( DIV ).addClass( CURRENT_HOURLY_WIND )
+        .html( node.wind.speed + ' ' + degToCard(node.wind.deg));
+       
+    let newNode = $ (DIV ).addClass( CURRENT_HOURLY_NODE)
+        .prop('title', node.weather[0].description)
+        .append( newTime, newIcon, newDesc, newTemp, newWDCH, newWind );
+    $( appendClassName ).append( newNode );
+}
+//  END today-tab -> hourly
+
+//
+//  START forecast tab - > days
+const _FORECAST_LIST = '.forecast-list';
+const FORECAST_LIST_NODE = 'forecast-list-item';
+const FORECAST_LIST_NODE_DAY = 'list-item-day';
+const FORECAST_LIST_NODE_TIME = 'list-item-date';
+const FORECAST_LIST_NODE_ICON = 'list-item-icon';
+const FORECAST_LIST_NODE_TEMP = 'list-item-temperature';
+const FORECAST_LIST_NODE_DESC = 'list-item-description';
+
+function createForecastDailyListNode( node, appendClassName, scrollPos ){
+    let newDay = $( DIV ).addClass( FORECAST_LIST_NODE_DAY )
+        .html( dateFormat( new Date( node.dt_txt ), "ddd" ) );
+    let newDate =  $(DIV).addClass( FORECAST_LIST_NODE_TIME )
+        .html( dateFormat( new Date( node.dt_txt ), "mmm dS" ) );
+    let newIcon = $( DIV ).addClass( FORECAST_LIST_NODE_ICON )
+        .html( createWeatherIcon( node.weather[0].id, node.dt_txt ) );
+    let newTemp = $( DIV ).addClass( FORECAST_LIST_NODE_TEMP )
+        .html( createTemperatureIcon( node.main.temp ) + ' ' + Math.round( node.main.temp ) + CELSIUS );
+    let newDesc = $( DIV ).addClass( FORECAST_LIST_NODE_DESC )
+        .html( node.weather[0].main );
+    let newNode = $( DIV ).addClass( FORECAST_LIST_NODE )
+        .addClass( dateFormat( new Date( node.dt_txt ), "ddd" ) )
+        .prop('title', node.weather[0].description)
+        .append( newDay, newDate, newIcon, newTemp, newDesc)
+        .click( (e) => {
+                $(_FORECAST_HOURLY).scrollLeft(scrollPos);
+                $('.main-section-forecast div').removeClass('forecast-node-selected');
+                $('.' + e.currentTarget.classList[1] + ' .' + FORECAST_HOURLY_LIST_NODE).addClass('forecast-node-selected');
+                $(e.currentTarget).addClass('forecast-node-selected');
+        });
+    $( appendClassName ).append( newNode );
+}
+//  END forecast-tab -> days
+//
+//  START forecast tab -> hourly list
+const _FORECAST_HOURLY ='.forecast-selected';
+const FORECAST_HOURLY_LIST = "forecast-selected-list";
+const FORECAST_HOURLY_LIST_NODE = 'selected-list-info';
+const HOURLY_LIST_NODE_TIME = "list-info-time";
+const HOURLY_LIST_NODE_ICON = "list-info-icon";
+const HOURLY_LIST_NODE_DESC = "list-info-forecast";
+const HOURLY_LIST_NODE_TEMP = "list-info-temperature";
+const HOURLY_LIST_NODE_WDCH = "list-info-realfeel";
+const HOURLY_LIST_NODE_WIND = "list-info-wind";
+
+function createForecastHourlyListNode( node, appendClassName){
+    let newTime = $( DIV ).addClass( HOURLY_LIST_NODE_TIME )
+        .html( dateFormat( new Date( node.dt_txt ), "HH:MM" ) );
+    let newIcon = $( DIV ).addClass( HOURLY_LIST_NODE_ICON )
+        .html( createWeatherIcon( node.weather[0].id, node.dt_txt ) );
+    let newDesc = $( DIV ).addClass( HOURLY_LIST_NODE_DESC )
+        .html( node.weather[0].main ) ;
+    let newTemp = $( DIV ).addClass( HOURLY_LIST_NODE_TEMP )
+        .html( Math.round( node.main.temp) + CELSIUS );
+    let newWDCH = $( DIV ).addClass( HOURLY_LIST_NODE_WDCH )
+        .html(Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
+    let newWind = $( DIV ).addClass( HOURLY_LIST_NODE_WIND )
+        .html( node.wind.speed + ' ' + degToCard(node.wind.deg));
+    let newNode = $ (DIV ).addClass( FORECAST_HOURLY_LIST_NODE)
+        .prop('title', node.weather[0].description)
+        .append( newTime, newIcon, newDesc, newTemp, newWDCH, newWind );
+    $( appendClassName ).append( newNode );
+};
+//  END forecast -> hourly list
 
 
-// const 
-// function loadTodayHourlyData(){
 
-// }
+
+function loadForecastData(list){
+    let patt = /00:00:00/;
+    let index = 0;
+    let scrollPos = 0;
+    //running through response
+    while ( index < 40 )
+    {
+        //searching start of the day
+        if ( patt.test( list[ index ].dt_txt ) ){
+            // creating new hourly list
+            let newClassName = dateFormat( new Date( list[ index ].dt_txt ), "ddd" );
+            let newHourlyList = $( DIV ).addClass( FORECAST_HOURLY_LIST )
+                                         .addClass( newClassName );
+            $( _FORECAST_HOURLY ).append( newHourlyList );
+            //create daily node
+            console.log('index = ' +(index + 4));
+            console.log('check daily node creation index < 40')
+            createForecastDailyListNode( list[index + 4], _FORECAST_LIST, scrollPos );
+            for ( let i = 0; i <= 8; ++i ){
+                let __index = ( ( index + i ) < 40 ) ? ( index + i ) : index ;
+                createForecastHourlyListNode( list[ __index ], _FORECAST_HOURLY + " ." + newClassName);
+            }
+            index += 7;
+            scrollPos += 1040;
+        }
+        index++;
+    }
+}
+

@@ -402,7 +402,8 @@ body {
 .today-hourly-selected,
 .today-hourly-info:hover,
 .selected-list-info:hover,
-.forecast-list-item:hover {
+.forecast-list-item:hover,
+.forecast-node-selected{
     cursor: pointer;
     background: #FEB53E;
     border-radius: 16px;
@@ -435,9 +436,6 @@ body {
     place-content: center center;
     row-gap: 4px;
     text-align: center;
-    /* temporatory added style */
-    background: #FEB53E;
-    border-radius: 16px;
 }
 
 .list-info-time{
