@@ -11,10 +11,53 @@ $('.nav-controls-forecast').click( ( event ) => {
     $('.nav-controls-forecast').addClass('nav-controls-selected');
 });
 $('.nav-search-button').click(e=>{
-    console.log('clicked');
-    document.querySelector('.main-section-error').scrollIntoView();
+    let cityName = $('.nav-search-input').val();
+    loadSelectedData(cityName);
+});
+$(".main-header").on('keyup', function (e) {
+    if (e.keyCode === 13) {
+        let cityName = $('.nav-search-input').val();
+        loadSelectedData(cityName);
+    }
 });
 
+function loadSelectedData(cityName){
+    axios.get( FORECAST + cityName + METRIC + API_KEY )
+        .then( function( response ){
+            loadCurrentCityData(response.data);
+            loadCurrentHourlyData(response.data.list);
+            loadForecastData(response.data.list);
+            loadNearbyCities(response.data.city.coord.lat,response.data.city.coord.lon);
+            $('.main-section').scrollTop(0);
+            if( $('.main-section').scrollLeft() ){
+                $('.nav-controls-today').removeClass('nav-controls-selected').show();
+                $('.nav-controls-forecast').addClass('nav-controls-selected').show();
+            } else {
+            $('.nav-controls-today').addClass('nav-controls-selected').show();
+            $('.nav-controls-forecast').removeClass('nav-controls-selected').show();
+            }
+        })
+        .catch( function( error ) {
+            handlingErrors(error);
+        })
+}
+function handlingErrors(error){
+    if (error.response) {
+        console.log(error.response.data);
+        $('.nav-controls-today').hide();
+        $('.nav-controls-forecast').hide();
+        $('.main-section-error-message').html('').append(
+                $(DIV).html( $('.nav-search-input').val() + " could not be found" ),
+                $(DIV).html( 'Please enter another location' )
+        )
+        document.querySelector('.main-section-error').scrollIntoView();
+    } else {
+        $('.nav-controls-today').hide();
+        $('.nav-controls-forecast').hide();
+        $('.main-section-error-message').html('Unknown error');
+        document.querySelector('.main-section-error').scrollIntoView();
+    }
+}
 const API_KEY = '&appid=b9c2e6ae48b91eafc79b582a9919ec60';
 const DEFAULT_CITY = 'Kharkiv';
 const FORECAST = 'http://api.openweathermap.org/data/2.5/forecast?q=';
@@ -41,7 +84,6 @@ function permissionGranted(position){
             loadCurrentCityData(response.data);
             loadCurrentHourlyData(response.data.list);
             loadForecastData(response.data.list);
-            console.log(response);
             loadNearbyCities(response.data.city.coord.lat,response.data.city.coord.lon);
         })
 };
@@ -63,7 +105,7 @@ function permissionDenied(error){
     loadDefaultCity();
 };
 function loadDefaultCity(){
-    axios.get( FORECAST + DEFAULT_CITY + METRIC + API_KEY)
+    axios.get( FORECAST + DEFAULT_CITY + METRIC + API_KEY )
     .then(function(response){
         console.log('Loading default city');
         loadCurrentCityData(response.data);
@@ -245,8 +287,8 @@ function loadForecastData(list){
             //create daily node
             let dayTime = ( (index + 4) < 40 ) ? index + 4 : index;
             createForecastDailyListNode( list[ dayTime ], _FORECAST_LIST, scrollPos );
-            for ( let i = 0; i <= 8; ++i ){
-                let __index = ( ( index + i ) < 40 ) ? ( index + i ) : index ;
+            for ( let i = 0, __index = index; i <= 8; ++i ){
+                __index = ( ( index + i ) < 40 ) ? ( index + i ) : __index ;
                 createForecastHourlyListNode( list[ __index ], _FORECAST_HOURLY + " ." + newClassName );
             }
             index += 7;
@@ -254,6 +296,11 @@ function loadForecastData(list){
         }
         index++;
     }
+    $( _FORECAST_LIST + ' .' + FORECAST_LIST_NODE + ':first-child')
+        .addClass('forecast-node-selected');
+    $( _FORECAST_HOURLY ).scrollLeft( 0 );
+    $( _FORECAST_HOURLY + " ." + FORECAST_HOURLY_LIST + ":first-child ." + FORECAST_HOURLY_LIST_NODE)
+        .addClass('forecast-node-selected');
 }
 //  END forecast main function
 //
@@ -290,7 +337,13 @@ function createNearbyContainerNode( node ){
         .html( createWeatherIcon( node.weather[0].id, node.dt * 1e3 ) );
     let cityTemp = $( DIV ).addClass( NEARBY_CONTAINER_NODE_TEMP )
         .html( ( node.main.temp ).toFixed( 1 ) + '&#8451;' );
-    let newNode = $( DIV ).addClass( NEARBY_CONTAINER_NODE ).append( cityName, cityIcon, cityTemp );
+    let newNode = $( DIV ).addClass( NEARBY_CONTAINER_NODE ).append( cityName, cityIcon, cityTemp )
+        .click( function(e){
+            let target  = $(e.currentTarget).find('div')[0];
+            let searchTerm = $(target).html();
+            $('.nav-search-input').val( searchTerm );
+            loadSelectedData( searchTerm );
+        });
 
     $( _NEARBY_CONTAINER ).append( newNode ).prop( 'title' , node.weather[0].description );
 };

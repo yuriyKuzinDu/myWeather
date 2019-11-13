@@ -180,7 +180,7 @@ body {
     overflow: hidden;
     grid: 
     "main-section-today main-section-forecast" 490px 
-    "main-section-error mein-section-ads " 490px
+    "main-section-error main-section-ads " 490px
     / 1120px 1120px;
     background: rgb(255, 168, 29);
 }
@@ -189,11 +189,20 @@ body {
     height: 490px;
     grid-area: main-section-error;
     display: grid;
-    place-content: end center;
+    grid-auto-columns: 840px;
+    grid-auto-rows: 290px 100px max-content;
+    place-content: center center;
+}
+.main-section-error-image{
     background: url(../img/404.png);
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 30%;
+    background-size: 40%;
+}
+.main-section-error-message {
+    text-align: center;
+    color: #464646;
+    font-size: 2em;
 }
 
 .main-section-today {
@@ -275,6 +284,9 @@ body {
     grid-auto-flow: row;
     place-content: center;
     row-gap: 4px;
+    border-right: 1px solid #FEB53E;
+    border-left: 1px solid #FEB53E;
+    border-radius: 20%;
 }
 .hourly-info-time{
     font-size: .9em;
@@ -402,13 +414,18 @@ body {
 .today-hourly-selected,
 .today-hourly-info:hover,
 .selected-list-info:hover,
-.forecast-list-item:hover,
-.forecast-node-selected{
+.forecast-list-item:hover{
     cursor: pointer;
     background: #FEB53E;
-    border-radius: 16px;
+    border-radius: 16px !important;
 }
-
+.forecast-list .forecast-node-selected,
+.forecast-selected-list .forecast-node-selected
+{
+    border-right: 2px solid darkslategray;
+    border-left: 2px solid rgb(182, 129, 43);
+    border-radius: 20%;
+}
 
 .forecast-selected {
     width: 1040px;
