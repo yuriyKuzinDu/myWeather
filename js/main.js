@@ -1,11 +1,9 @@
 $('.nav-controls-today').click( ( event ) => {
-    //document.querySelector('.main-section-today').scrollIntoView();
     $('.main-section').scrollLeft(0);
     $('.nav-controls-selected').removeClass('nav-controls-selected');
     $('.nav-controls-today').addClass('nav-controls-selected');
 });
 $('.nav-controls-forecast').click( ( event ) => {
-    //document.querySelector('.main-section-forecast').scrollIntoView();
     $('.main-section').scrollLeft(1120);
     $('.nav-controls-selected').removeClass('nav-controls-selected');
     $('.nav-controls-forecast').addClass('nav-controls-selected');
@@ -348,3 +346,12 @@ function createNearbyContainerNode( node ){
     $( _NEARBY_CONTAINER ).append( newNode ).prop( 'title' , node.weather[0].description );
 };
 //  END Nearby container
+
+
+let searchinput = 'search-input';
+$(document).ready( function() {
+    let autocomplete;
+    autocomplete = new google.maps.places.Autocomplete( ( document.getElementById(searchinput)),{
+        types: ['(cities)']
+    });
+})

@@ -154,8 +154,9 @@ body {
     padding: 5px;
     border-radius: 5px 0 0 5px;
     outline: none;
-    color: #fff;
+    color: #000;
     background: transparent;
+    font-weight: bold;
 }
 .nav-search-button{
     width: 40px;
@@ -477,3 +478,9 @@ body {
     color: darkslategray;
 }
 
+.pac-item {
+    background: #FEB53E !important;
+}
+div.pac-container.pac-logo::after{
+    background: #FEB53E !important;
+}

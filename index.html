@@ -12,6 +12,7 @@
     <script src="js/wind-direction.js"></script>
     <script src="js/basic-functions.js"></script>
     <script src="node_modules/axios/dist/axios.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyCTn30xqZo1poQRKh1a_W_8u-63eJNSwI4"></script>
 </head>
 <body>
     <main class="main-wrapper">
@@ -27,7 +28,7 @@
                     </div>
                 </div>
                 <div class="nav-search">
-                    <input type="text" class="nav-search-input" placeholder="City name..." autocapitalize="words">
+                    <input type="text" class="nav-search-input" id="search-input" placeholder="City name..." autocapitalize="words">
                     <button type="button" class="nav-search-button">
                         <i class="fa fa-search"></i>
                     </button>
