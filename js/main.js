@@ -15,26 +15,13 @@ $('.nav-search-button').click(e=>{
     document.querySelector('.main-section-error').scrollIntoView();
 });
 
-
-function createNearbyContainer(name){
-    let cityName = $("<div></div>").addClass("nearby-container-cityname").html(name);
-    let cityIcon = $("<div></div>").addClass("nearby-container-cityicon").html('<i class="fas fa-cloud-meatball"></i>');
-    let cityTemp = $("<div></div>").addClass("nearby-container-citytemp").html('12.5&#8451;');
-    let newContainer = $("<div></div>").addClass("today-nearby-container").append(cityName, cityIcon, cityTemp);
-    $(".today-nearby").append(newContainer);
-};
-
-
-createNearbyContainer("Krakow");
-createNearbyContainer("Zaporozhie");
-createNearbyContainer("Bachchisaray");
-createNearbyContainer("Kiev");
-
 const API_KEY = '&appid=b9c2e6ae48b91eafc79b582a9919ec60';
 const DEFAULT_CITY = 'Kharkiv';
 const FORECAST = 'http://api.openweathermap.org/data/2.5/forecast?q=';
 const METRIC = '&units=metric';
 const FORECAST_ = 'http://api.openweathermap.org/data/2.5/forecast?';
+//http://api.openweathermap.org/data/2.5/find?lat=55.5&lon=37.5&cnt=10
+const NEARBY = 'http://api.openweathermap.org/data/2.5/find?';
 
 $(function(){
     if (navigator.geolocation) {
@@ -54,6 +41,8 @@ function permissionGranted(position){
             loadCurrentCityData(response.data);
             loadCurrentHourlyData(response.data.list);
             loadForecastData(response.data.list);
+            console.log(response);
+            loadNearbyCities(response.data.city.coord.lat,response.data.city.coord.lon);
         })
 };
 function permissionDenied(error){
@@ -143,10 +132,10 @@ const CURRENT_HOURLY_WIND = 'hourly-info-wind';
 const CURRENT_HOURLY_NODE = 'today-hourly-info';
 const _TODAY_HOURLY = '.today-hourly';
 
-function loadCurrentHourlyData(list){
-    $(_TODAY_HOURLY).html('');
+function loadCurrentHourlyData( list ){
+    $( _TODAY_HOURLY ).html('');
     for(let i = 0; i < 8; ++i){
-        createHourlyNode(list[i],_TODAY_HOURLY);
+        createHourlyNode( list[ i ], _TODAY_HOURLY );
     }
 }
 function createHourlyNode( node, appendClassName ){
@@ -155,16 +144,16 @@ function createHourlyNode( node, appendClassName ){
     let  newIcon = $( DIV ).addClass( CURRENT_HOURLY_ICON )
         .html( createWeatherIcon( node.weather[0].id, node.dt_txt ) );
     let newDesc = $( DIV ).addClass( CURRENT_HOURLY_DESC )
-        .html( node.weather[0].main) ;
+        .html( node.weather[0].main ) ;
     let newTemp = $( DIV ).addClass( CURRENT_HOURLY_TEMP )
-        .html( Math.round( node.main.temp) + CELSIUS );
+        .html( Math.round( node.main.temp ) + CELSIUS );
     let newWDCH = $( DIV ).addClass( CURRENT_HOURLY_WDCH )
-        .html(Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
+        .html( Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
     let newWind = $( DIV ).addClass( CURRENT_HOURLY_WIND )
-        .html( node.wind.speed + ' ' + degToCard(node.wind.deg));
+        .html( node.wind.speed + ' ' + degToCard( node.wind.deg ) );
        
-    let newNode = $ (DIV ).addClass( CURRENT_HOURLY_NODE)
-        .prop('title', node.weather[0].description)
+    let newNode = $( DIV ).addClass( CURRENT_HOURLY_NODE)
+        .prop('title', node.weather[0].description )
         .append( newTime, newIcon, newDesc, newTemp, newWDCH, newWind );
     $( appendClassName ).append( newNode );
 }
@@ -193,10 +182,10 @@ function createForecastDailyListNode( node, appendClassName, scrollPos ){
         .html( node.weather[0].main );
     let newNode = $( DIV ).addClass( FORECAST_LIST_NODE )
         .addClass( dateFormat( new Date( node.dt_txt ), "ddd" ) )
-        .prop('title', node.weather[0].description)
-        .append( newDay, newDate, newIcon, newTemp, newDesc)
+        .prop('title', node.weather[0].description )
+        .append( newDay, newDate, newIcon, newTemp, newDesc )
         .click( (e) => {
-                $(_FORECAST_HOURLY).scrollLeft(scrollPos);
+                $( _FORECAST_HOURLY ).scrollLeft( scrollPos );
                 $('.main-section-forecast div').removeClass('forecast-node-selected');
                 $('.' + e.currentTarget.classList[1] + ' .' + FORECAST_HOURLY_LIST_NODE).addClass('forecast-node-selected');
                 $(e.currentTarget).addClass('forecast-node-selected');
@@ -226,20 +215,20 @@ function createForecastHourlyListNode( node, appendClassName){
     let newTemp = $( DIV ).addClass( HOURLY_LIST_NODE_TEMP )
         .html( Math.round( node.main.temp) + CELSIUS );
     let newWDCH = $( DIV ).addClass( HOURLY_LIST_NODE_WDCH )
-        .html(Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
+        .html( Math.floor( windChill( node.main.temp, node.wind.speed ) ) + CELSIUS );
     let newWind = $( DIV ).addClass( HOURLY_LIST_NODE_WIND )
-        .html( node.wind.speed + ' ' + degToCard(node.wind.deg));
-    let newNode = $ (DIV ).addClass( FORECAST_HOURLY_LIST_NODE)
-        .prop('title', node.weather[0].description)
+        .html( node.wind.speed + ' ' + degToCard( node.wind.deg ) );
+    let newNode = $( DIV ).addClass( FORECAST_HOURLY_LIST_NODE)
+        .prop( 'title' , node.weather[0].description )
         .append( newTime, newIcon, newDesc, newTemp, newWDCH, newWind );
     $( appendClassName ).append( newNode );
 };
 //  END forecast -> hourly list
-
-
-
-
+//
+//  START forecast main function
 function loadForecastData(list){
+    $( _FORECAST_HOURLY ).html('');
+    $( _FORECAST_LIST ).html('')
     let patt = /00:00:00/;
     let index = 0;
     let scrollPos = 0;
@@ -254,12 +243,11 @@ function loadForecastData(list){
                                          .addClass( newClassName );
             $( _FORECAST_HOURLY ).append( newHourlyList );
             //create daily node
-            console.log('index = ' +(index + 4));
-            console.log('check daily node creation index < 40')
-            createForecastDailyListNode( list[index + 4], _FORECAST_LIST, scrollPos );
+            let dayTime = ( (index + 4) < 40 ) ? index + 4 : index;
+            createForecastDailyListNode( list[ dayTime ], _FORECAST_LIST, scrollPos );
             for ( let i = 0; i <= 8; ++i ){
                 let __index = ( ( index + i ) < 40 ) ? ( index + i ) : index ;
-                createForecastHourlyListNode( list[ __index ], _FORECAST_HOURLY + " ." + newClassName);
+                createForecastHourlyListNode( list[ __index ], _FORECAST_HOURLY + " ." + newClassName );
             }
             index += 7;
             scrollPos += 1040;
@@ -267,4 +255,43 @@ function loadForecastData(list){
         index++;
     }
 }
+//  END forecast main function
+//
+//  START Nearby cities
+function loadNearbyCities( latitude, longitude, count = 50){
+    $( _NEARBY_CONTAINER ).html('');
+    //http://api.openweathermap.org/data/2.5/find?lat=55.5&lon=37.5&cnt=10
+    const LAT = 'lat=' + latitude.toFixed(2);
+    const LON = '&lon=' + longitude.toFixed(2);
+    const CNT = '&cnt=' + count;
+    axios.get( NEARBY + LAT + LON + METRIC + CNT + API_KEY )
+        .then( function( response ){
+            let list = response.data.list;
+            // add some magic with colors, i know that there is no colors
+            list.sort( ( a, b ) => ( a.color > b.color ) ? 1 : -1 );
+            for ( let i = 0 ; i < 4 ; ++i){
+                createNearbyContainerNode( list[ i ] );
+            }
+        });
 
+}
+//  END Nearby cities
+//
+//  Start Nearby container
+const _NEARBY_CONTAINER = ".today-nearby";
+const NEARBY_CONTAINER_NODE = "today-nearby-container";
+const NEARBY_CONTAINER_NODE_NAME = "nearby-container-cityname";
+const NEARBY_CONTAINER_NODE_ICON = "nearby-container-cityicon";
+const NEARBY_CONTAINER_NODE_TEMP = "nearby-container-citytemp";
+function createNearbyContainerNode( node ){
+    let cityName = $( DIV ).addClass( NEARBY_CONTAINER_NODE_NAME )
+        .html( node.name );
+    let cityIcon = $( DIV ).addClass( NEARBY_CONTAINER_NODE_ICON )
+        .html( createWeatherIcon( node.weather[0].id, node.dt * 1e3 ) );
+    let cityTemp = $( DIV ).addClass( NEARBY_CONTAINER_NODE_TEMP )
+        .html( ( node.main.temp ).toFixed( 1 ) + '&#8451;' );
+    let newNode = $( DIV ).addClass( NEARBY_CONTAINER_NODE ).append( cityName, cityIcon, cityTemp );
+
+    $( _NEARBY_CONTAINER ).append( newNode ).prop( 'title' , node.weather[0].description );
+};
+//  END Nearby container
